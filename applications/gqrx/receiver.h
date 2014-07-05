@@ -86,7 +86,8 @@ public:
         RX_DEMOD_WFM_S = 5,  /*!< Frequency modulation (wide, stereo). */
         RX_DEMOD_SSB   = 6,   /*!< Single Side Band. */
         RX_DEMOD_QPSK = 7,
-        RX_DEMOD_DSD   = 8
+        RX_DEMOD_DSD   = 8,
+        RX_DEMOD_DSD_PROVOICE   = 9
     };
 
     /*! \brief Supported receiver types. */

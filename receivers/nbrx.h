@@ -64,7 +64,8 @@ public:
         NBRX_DEMOD_SSB  = 3,  /*!< Single Side Band. */
         NBRX_DEMOD_NUM  = 4,   /*!< Included for convenience. */
         NBRX_DEMOD_QPSK = 5,
-        NBRX_DEMOD_DSD  = 6
+        NBRX_DEMOD_DSD  = 6,
+        NBRX_DEMOD_DSD_PROVOICE  = 7
     };
 
 public:
@@ -132,6 +133,7 @@ private:
     resampler_ff_sptr         audio_rr;   /*!< Audio resampler. */
     rx_filter_sptr            filter_qpsk;  /*!< Non-translating bandpass filter.*/
     dsd_block_ff_sptr         dsd;
+    dsd_block_ff_sptr         dsd2;
     resampler_ff_sptr         audio_rr_dsd;   /*!< Audio resampler. */
     gr::blocks::multiply_const_ff::sptr gain_dsd;
     resampler_cc_sptr         iq_resamp_qpsk;   /*!< Baseband resampler. */

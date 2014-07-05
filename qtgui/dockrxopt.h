@@ -64,7 +64,8 @@ public:
         MODE_CWL        = 8, /*!< CW using LSB filter. */
         MODE_CWU        = 9,  /*!< CW using USB filter. */
         MODE_QPSK      = 10,
-        MODE_DSD        = 11
+        MODE_DSD        = 11,
+        MODE_DSD_PROVOICE        = 12
     };
 
     explicit DockRxOpt(qint64 filterOffsetRange = 90000, QWidget *parent = 0);

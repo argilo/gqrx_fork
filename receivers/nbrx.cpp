@@ -55,6 +55,7 @@ nbrx::nbrx(float quad_rate, float audio_rate)
     audio_rr = make_resampler_ff(d_audio_rate/PREF_AUDIO_RATE);
     audio_rr_dsd = make_resampler_ff(PREF_AUDIO_RATE/8000);
     dsd = dsd_make_block_ff();
+    dsd2 = dsd_make_block_ff(dsd_FRAME_PROVOICE);
     gain_dsd = gr::blocks::multiply_const_ff::make(3);
     float_to_char = gr::blocks::float_to_char::make(1,1.0);
     shout_streamer = make_shoutstreamer();
@@ -187,7 +188,7 @@ void nbrx::set_demod(int rx_demod)
     nbrx_demod current_demod = d_demod;
 
     /* check if new demodulator selection is valid */
-    if ((rx_demod < NBRX_DEMOD_NONE) || (rx_demod > NBRX_DEMOD_DSD))
+    if ((rx_demod < NBRX_DEMOD_NONE) || (rx_demod > NBRX_DEMOD_DSD_PROVOICE))
         return;
 
     if (rx_demod == current_demod) {
@@ -250,6 +251,20 @@ void nbrx::set_demod(int rx_demod)
         connect(audio_rr,0 ,self(), 0);
         connect(audio_rr,0 ,self(), 1);
         break;
+
+    case NBRX_DEMOD_DSD_PROVOICE:
+        disconnect(agc, 0, demod_fm, 0);
+        disconnect(demod_fm, 0, audio_rr, 0);
+        disconnect(audio_rr, 0, gain_dsd, 0);
+        disconnect(audio_rr_dsd, 0, self(), 0);
+        disconnect(audio_rr_dsd, 0, self(), 1);
+        //disconnect(audio_rr_dsd, 0, float_to_char, 0);
+        //disconnect(float_to_char, 0, shout_streamer, 0);
+        disconnect(dsd2, 0, audio_rr_dsd, 0);
+        disconnect(gain_dsd, 0, dsd2, 0);
+        connect(audio_rr,0 ,self(), 0);
+        connect(audio_rr,0 ,self(), 1);
+        break;
     }
 
     switch (rx_demod) {
@@ -300,6 +315,21 @@ void nbrx::set_demod(int rx_demod)
         connect(audio_rr, 0, gain_dsd, 0);
         connect(gain_dsd, 0, dsd, 0);
         connect(dsd, 0, audio_rr_dsd, 0);
+        connect(audio_rr_dsd, 0, self(), 0);
+        connect(audio_rr_dsd, 0, self(), 1);
+        //connect(audio_rr_dsd, 0, float_to_char, 0);
+        //connect(float_to_char, 0, shout_streamer, 0);
+        break;
+
+    case NBRX_DEMOD_DSD_PROVOICE:
+        d_demod = NBRX_DEMOD_DSD_PROVOICE;
+        connect(agc, 0, demod_fm, 0);
+        connect(demod_fm, 0, audio_rr, 0);
+        disconnect(audio_rr, 0 ,self(), 0);
+        disconnect(audio_rr, 0 ,self(), 1);
+        connect(audio_rr, 0, gain_dsd, 0);
+        connect(gain_dsd, 0, dsd2, 0);
+        connect(dsd2, 0, audio_rr_dsd, 0);
         connect(audio_rr_dsd, 0, self(), 0);
         connect(audio_rr_dsd, 0, self(), 1);
         //connect(audio_rr_dsd, 0, float_to_char, 0);

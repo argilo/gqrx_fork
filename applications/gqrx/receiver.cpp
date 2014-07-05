@@ -771,6 +771,15 @@ receiver::status receiver::set_demod(rx_demod demod)
         rx->set_demod(nbrx::NBRX_DEMOD_DSD);
         break;
 
+    case RX_DEMOD_DSD_PROVOICE:
+        if ((d_demod == RX_DEMOD_OFF) || wide_fm)
+        {
+            tb->disconnect_all();
+            connect_all(RX_CHAIN_NBRX);
+        }
+        rx->set_demod(nbrx::NBRX_DEMOD_DSD_PROVOICE);
+        break;
+
     default:
         ret = STATUS_ERROR;
         break;
